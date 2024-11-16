@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Directory Fuzzing</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Directory Fuzzing Tool</h1>
+        <form action="{{ url_for('fuzz') }}" method="POST" enctype="multipart/form-data">
+            <label for="target_url">Enter the Target URL:</label>
+            <input type="text" name="target_url" id="target_url" required><br><br>
+
+            <label for="wordlist">Choose Wordlist:</label>
+            <select name="wordlist" id="wordlist" required>
+                <option value="default">Default Wordlist</option>
+                <option value="custom">Upload Custom Wordlist</option>
+            </select><br><br>
+
+            <div id="custom_wordlist" style="display: none;">
+                <label for="wordlist_file">Upload Wordlist File:</label>
+                <input type="file" name="wordlist_file" id="wordlist_file" accept=".txt"><br><br>
+            </div>
+
+            <button type="submit">Start Fuzzing</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('wordlist').addEventListener('change', function() {
+            var customWordlist = document.getElementById('custom_wordlist');
+            if (this.value === 'custom') {
+                customWordlist.style.display = 'block';
+            } else {
+                customWordlist.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

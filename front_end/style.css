@@ -1,0 +1,31 @@
+/* Global Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+}
+
+/* Container */
+.container {
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 30px;
+    margin-top: 50px;
+}
+
+/* Form Section */
+.form-section {
+    margin-bottom: 20px;
+}
+
+/* Hidden Sections */
+.hidden {
+    display: none;
+}
+
+#outputSection {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}

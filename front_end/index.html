@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Application Fuzzing Tool</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="text-center my-4">Web Application Fuzzing Tool</h1>
+        <form id="fuzzingForm">
+            <div class="mb-3">
+                <label for="targetUrl" class="form-label">Enter the target URL</label>
+                <input type="url" class="form-control" id="targetUrl" placeholder="https://example.com" required>
+            </div>
+
+            <div id="dirFuzzingSection" class="form-section">
+                <label class="form-label">Do you want to perform Directory Fuzzing?</label>
+                <select class="form-select" id="dirFuzzing" required>
+                    <option value="no">No</option>
+                    <option value="yes">Yes</option>
+                </select>
+            </div>
+
+            <div id="dirWordlistSection" class="form-section hidden">
+                <label class="form-label">Do you want to use your own custom wordlist or our default wordlist?</label>
+                <select class="form-select" id="dirWordlist" required>
+                    <option value="default">Default Wordlist</option>
+                    <option value="custom">Custom Wordlist</option>
+                </select>
+                <div id="dirUploadSection" class="hidden">
+                    <label class="form-label">Upload your custom wordlist</label>
+                    <input type="file" class="form-control" id="dirWordlistFile" accept=".txt">
+                </div>
+            </div>
+
+            <div id="subdomainFuzzingSection" class="form-section">
+                <label class="form-label">Do you want to perform Subdomain Fuzzing?</label>
+                <select class="form-select" id="subdomainFuzzing" required>
+                    <option value="no">No</option>
+                    <option value="yes">Yes</option>
+                </select>
+            </div>
+
+            <div id="subdomainWordlistSection" class="form-section hidden">
+                <label class="form-label">Do you want to use your own custom wordlist or our default wordlist?</label>
+                <select class="form-select" id="subdomainWordlist" required>
+                    <option value="default">Default Wordlist</option>
+                    <option value="custom">Custom Wordlist</option>
+                </select>
+                <div id="subdomainUploadSection" class="hidden">
+                    <label class="form-label">Upload your custom wordlist</label>
+                    <input type="file" class="form-control" id="subdomainWordlistFile" accept=".txt">
+                </div>
+            </div>
+
+            <div id="sqlInjectionSection" class="form-section">
+                <label class="form-label">Do you want to perform SQL Injection?</label>
+                <select class="form-select" id="sqlInjection" required>
+                    <option value="no">No</option>
+                    <option value="yes">Yes</option>
+                </select>
+            </div>
+
+            <div id="sqlWordlistSection" class="form-section hidden">
+                <label class="form-label">Do you want to use your own custom wordlist or our default wordlist?</label>
+                <select class="form-select" id="sqlWordlist" required>
+                    <option value="default">Default Wordlist</option>
+                    <option value="custom">Custom Wordlist</option>
+                </select>
+                <div id="sqlUploadSection" class="hidden">
+                    <label class="form-label">Upload your custom wordlist</label>
+                    <input type="file" class="form-control" id="sqlWordlistFile" accept=".txt">
+                </div>
+            </div>
+
+            <div id="xssSection" class="form-section">
+                <label class="form-label">Do you want to perform XSS?</label>
+                <select class="form-select" id="xss" required>
+                    <option value="no">No</option>
+                    <option value="yes">Yes</option>
+                </select>
+            </div>
+
+            <div id="xssWordlistSection" class="form-section hidden">
+                <label class="form-label">Do you want to use your own custom wordlist or our default wordlist?</label>
+                <select class="form-select" id="xssWordlist" required>
+                    <option value="default">Default Wordlist</option>
+                    <option value="custom">Custom Wordlist</option>
+                </select>
+                <div id="xssUploadSection" class="hidden">
+                    <label class="form-label">Upload your custom wordlist</label>
+                    <input type="file" class="form-control" id="xssWordlistFile" accept=".txt">
+                </div>
+            </div>
+
+            <div id="fileInclusionSection" class="form-section">
+                <label class="form-label">Do you want to perform File Inclusion?</label>
+                <select class="form-select" id="fileInclusion" required>
+                    <option value="no">No</option>
+                    <option value="yes">Yes</option>
+                </select>
+            </div>
+
+            <div id="fileUploadSection" class="form-section hidden">
+                <label class="form-label">Do you want to use your own custom file or our default file?</label>
+                <select class="form-select" id="fileUploadOption" required>
+                    <option value="default">Default File</option>
+                    <option value="custom">Custom File</option>
+                </select>
+                <div id="fileUploadInput" class="hidden">
+                    <label class="form-label">Upload your custom file</label>
+                    <input type="file" class="form-control" id="fileUpload" accept=".txt">
+                </div>
+            </div>
+
+            <div id="secMisconfigurationSection" class="form-section">
+                <label class="form-label">Do you want to find Security Misconfigurations?</label>
+                <select class="form-select" id="secMisconfiguration" required>
+                    <option value="no">No</option>
+                    <option value="yes">Yes</option>
+                </select>
+            </div>
+
+            <div id="networkScanSection" class="form-section">
+                <label class="form-label">Do you want to perform Network Scan?</label>
+                <select class="form-select" id="networkScan" required>
+                    <option value="no">No</option>
+                    <option value="yes">Yes</option>
+                </select>
+            </div>
+
+            <div id="whoisInfoSection" class="form-section">
+                <label class="form-label">Do you want to find Whois information of the target website?</label>
+                <select class="form-select" id="whoisInfo" required>
+                    <option value="no">No</option>
+                    <option value="yes">Yes</option>
+                </select>
+            </div>
+
+            <div id="sslCertInfoSection" class="form-section">
+                <label class="form-label">Do you want SSL certificate info?</label>
+                <select class="form-select" id="sslCertInfo" required>
+                    <option value="no">No</option>
+                    <option value="yes">Yes</option>
+                </select>
+            </div>
+
+            <div id="csrfTokensSection" class="form-section">
+                <label class="form-label">Do you want to capture CSRF tokens?</label>
+                <select class="form-select" id="csrfTokens" required>
+                    <option value="no">No</option>
+                    <option value="yes">Yes</option>
+                </select>
+            </div>
+
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-primary">Start Fuzzing</button>
+            </div>
+        </form>
+
+        <div id="outputSection" class="mt-5 hidden">
+            <h3>Fuzzing Results</h3>
+            <pre id="output"></pre>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+</body>
+
+</html>

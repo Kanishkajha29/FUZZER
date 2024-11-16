@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subdomain Fuzzing Results</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Subdomain Fuzzing Results</h1>
+        <p><strong>Target URL:</strong> {{ target_url }}</p>
+
+        {% if subdomains %}
+            <h3>Found Subdomains:</h3>
+            <ul class="list-group">
+                {% for subdomain in subdomains %}
+                    <li class="list-group-item">{{ subdomain }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <div class="alert alert-warning mt-3" role="alert">
+                No subdomains found.
+            </div>
+        {% endif %}
+        
+        <a href="{{ url_for('index') }}" class="btn btn-secondary mt-3">Back to Fuzzing</a>
+    </div>
+</body>
+</html>
