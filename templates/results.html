@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Injection Test Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1 class="header">SQL Injection Test Results</h1>
+        <table class="results-table">
+            <thead>
+                <tr>
+                    <th class="table-header">Payload</th>
+                    <th class="table-header">Status Code</th>
+                    <th class="table-header">Response Snippet</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for result in results if result.anomalous %}
+                    <tr class="anomalous-row">
+                        <td>{{ result.payload or 'N/A' }}</td>
+                        <td>{{ result.status_code or 'N/A' }}</td>
+                        <td>{{ result.response_snippet or result.error }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="/" class="back-btn">Back to Home</a>
+    </div>
+</body>
+</html>
