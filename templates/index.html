@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VHOST Enumeration</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>VHOST Enumeration Tool</h1>
+        <form action="/start_enum" method="POST" enctype="multipart/form-data">
+            <label for="target_website">Enter the target website:</label>
+            <input type="text" id="target_website" name="target_website" required>
+            
+            <label for="payload_option">Choose payload type:</label>
+            <select name="payload_option" id="payload_option">
+                <option value="default">Use default payload</option>
+                <option value="custom">Upload custom payload</option>
+            </select>
+
+            <div id="custom_payload" style="display:none;">
+                <label for="file">Upload custom payload file:</label>
+                <input type="file" id="file" name="file">
+            </div>
+
+            <button type="submit">Start Enumeration</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('payload_option').addEventListener('change', function() {
+            if (this.value == 'custom') {
+                document.getElementById('custom_payload').style.display = 'block';
+            } else {
+                document.getElementById('custom_payload').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
