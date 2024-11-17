@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Results for {{ url }}</h1>
+        <div class="result-section">
+            {% if results.network_map %}
+                <h2>Network Map Information:</h2>
+                <p><strong>IP Address:</strong> {{ results.network_map.ip }}</p>
+                <p><strong>Open Ports:</strong> {{ results.network_map.open_ports }}</p>
+            {% endif %}
+
+            {% if results.whois_info %}
+                <h2>WHOIS Information:</h2>
+                <pre>{{ results.whois_info }}</pre>
+            {% endif %}
+
+            {% if results.ssl_info %}
+                <h2>SSL Certification Information:</h2>
+                <ul>
+                    <li><strong>Subject:</strong> {{ results.ssl_info.subject }}</li>
+                    <li><strong>Issuer:</strong> {{ results.ssl_info.issuer }}</li>
+                    <li><strong>Expiration:</strong> {{ results.ssl_info.expiration }}</li>
+                </ul>
+            {% endif %}
+        </div>
+        <a href="/">Back to Home</a>
+    </div>
+</body>
+</html>

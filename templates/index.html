@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Information Gathering Tool</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Information Gathering Tool</h1>
+        <form method="POST">
+            <label for="target_url">Enter the Target URL:</label>
+            <input type="text" id="target_url" name="target_url" required>
+
+            <label>Do you want to get Network Map information (IP and open ports)?</label>
+            <select name="network_map">
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
+
+            <label>Do you want to get WHOIS information?</label>
+            <select name="whois_info">
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
+
+            <label>Do you want to get SSL Certification information?</label>
+            <select name="ssl_info">
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</body>
+</html>
