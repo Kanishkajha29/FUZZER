@@ -4,13 +4,20 @@ import requests
 from concurrent.futures import ThreadPoolExecutor
 from utils.dir_fuzz import dir_fuzz  # Custom module for directory fuzzing
 from utils.subdomain_fuzz import subdomain_fuzzing  # Custom module for subdomain fuzzing
+from utils.vhost import VHostEnum  # Custom module for VHost enumeration
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Replace with a strong, unique key for production use
+app.config['UPLOAD_FOLDER'] = './uploads/'
+app.config['ALLOWED_EXTENSIONS'] = {'txt'}
 
 # Create required directories if they don't exist
 os.makedirs('uploads', exist_ok=True)
 os.makedirs('default_wordlists', exist_ok=True)
+
+# Helper function for allowed file extension check
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
 # Function to detect API endpoints
 def detect_api_endpoints(target_url, payloads):
@@ -44,7 +51,7 @@ def detect_api_endpoints(target_url, payloads):
 def index():
     return render_template('index.html')
 
-# Route to handle fuzzing operations
+# Route to handle fuzzing operations (Directory and Subdomain Fuzzing)
 @app.route('/fuzz', methods=['POST'])
 def fuzz():
     target_url = request.form['target_url']
@@ -125,6 +132,28 @@ def detect():
     if not results:
         return render_template('results.html', message="No successful endpoints found.")
     return render_template('results.html', results=results)
+
+# Route to handle VHost enumeration
+@app.route('/start_enum', methods=['POST'])
+def start_enum():
+    target_website = request.form['target_website']
+    payload_option = request.form['payload_option']
+    
+    if payload_option == 'custom' and 'file' in request.files:
+        file = request.files['file']
+        if file and allowed_file(file.filename):
+            filename = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+            file.save(filename)
+            payload_file = filename
+        else:
+            return "Invalid file format", 400
+    else:
+        payload_file = './default_wordlists/vhost.txt'
+    
+    vhost_enum = VHostEnum(target_website, payload_file)
+    result = vhost_enum.run_enum()
+    
+    return render_template('results.html', target=target_website, result=result)
 
 if __name__ == '__main__':
     app.run(debug=True)
