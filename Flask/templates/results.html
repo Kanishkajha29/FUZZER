@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fuzzing Results</title>
+</head>
+<body>
+    <h1>Fuzzing Results for {{ target_url }}</h1>
+
+    {% if results.directory %}
+        <h2>Directory Fuzzing Results:</h2>
+        <ul>
+            {% for result in results.directory %}
+                <li>{{ result }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% if results.subdomain %}
+        <h2>Subdomain Fuzzing Results:</h2>
+        <ul>
+            {% for subdomain in results.subdomain %}
+                <li>{{ subdomain }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% if not results %}
+        <p>No results found. Please try again.</p>
+    {% endif %}
+
+    <a href="{{ url_for('index') }}">Back to Home</a>
+</body>
+</html>

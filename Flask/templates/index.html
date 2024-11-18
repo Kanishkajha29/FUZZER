@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fuzzing Tool</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            font-weight: bold;
+        }
+        .form-group select, .form-group input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+        }
+        .form-group input[type="file"] {
+            padding: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .alert {
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            margin-top: 20px;
+        }
+        .alert-danger {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+        .alert-warning {
+            background-color: #fff3cd;
+            border-color: #ffeeba;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Fuzzing Tool</h1>
+
+    <!-- Display Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    
+    <form action="{{ url_for('fuzz') }}" method="POST" enctype="multipart/form-data">
+        <!-- Target URL -->
+        <div class="form-group">
+            <label for="target_url">Target URL:</label>
+            <input type="text" id="target_url" name="target_url" required>
+        </div>
+
+        <!-- Directory Fuzzing -->
+        <div class="form-group">
+            <label>Directory Fuzzing:</label>
+            <input type="radio" name="directory_fuzz" value="yes" id="directory_yes"> Yes
+            <input type="radio" name="directory_fuzz" value="no" id="directory_no" checked> No
+
+            <!-- Wordlist selection and upload (shown only if "Yes" is selected) -->
+            <div id="directory_upload" style="display:none;">
+                <label for="wordlist">Select Wordlist:</label>
+                <select name="wordlist" id="wordlist" onchange="toggleDirectoryUpload()">
+                    <option value="default">Use Default Wordlist</option>
+                    <option value="custom">Upload Custom Wordlist</option>
+                </select>
+                <br>
+                <input type="file" name="wordlist_file" id="wordlist_file" style="display:none;">
+            </div>
+        </div>
+
+        <!-- Subdomain Fuzzing -->
+        <div class="form-group">
+            <label>Subdomain Fuzzing:</label>
+            <input type="radio" name="subdomain_fuzz" value="yes" id="subdomain_yes"> Yes
+            <input type="radio" name="subdomain_fuzz" value="no" id="subdomain_no" checked> No
+
+            <!-- Payload selection and upload (shown only if "Yes" is selected) -->
+            <div id="subdomain_upload" style="display:none;">
+                <label for="payload_option">Select Payload Option:</label>
+                <select name="payload_option" id="payload_option" onchange="toggleSubdomainUpload()">
+                    <option value="default">Use Default Payload</option>
+                    <option value="custom">Upload Custom Payload</option>
+                </select>
+                <br>
+                <input type="file" name="custom_payload" id="custom_payload" style="display:none;">
+            </div>
+        </div>
+
+        <button type="submit">Start Fuzzing</button>
+    </form>
+
+    <script>
+        // Show/hide Directory Fuzzing options based on selection
+        document.getElementById('directory_yes').addEventListener('change', function() {
+            document.getElementById('directory_upload').style.display = 'block';
+        });
+        document.getElementById('directory_no').addEventListener('change', function() {
+            document.getElementById('directory_upload').style.display = 'none';
+        });
+
+        // Show/hide Subdomain Fuzzing options based on selection
+        document.getElementById('subdomain_yes').addEventListener('change', function() {
+            document.getElementById('subdomain_upload').style.display = 'block';
+        });
+        document.getElementById('subdomain_no').addEventListener('change', function() {
+            document.getElementById('subdomain_upload').style.display = 'none';
+        });
+
+        // Toggle directory file upload input visibility based on wordlist selection
+        function toggleDirectoryUpload() {
+            var wordlistChoice = document.getElementById('wordlist').value;
+            var wordlistFileInput = document.getElementById('wordlist_file');
+            if (wordlistChoice === 'custom') {
+                wordlistFileInput.style.display = 'inline';
+            } else {
+                wordlistFileInput.style.display = 'none';
+            }
+        }
+
+        // Toggle subdomain file upload input visibility based on payload selection
+        function toggleSubdomainUpload() {
+            var payloadChoice = document.getElementById('payload_option').value;
+            var payloadFileInput = document.getElementById('custom_payload');
+            if (payloadChoice === 'custom') {
+                payloadFileInput.style.display = 'inline';
+            } else {
+                payloadFileInput.style.display = 'none';
+            }
+        }
+    </script>
+
+</body>
+</html>
