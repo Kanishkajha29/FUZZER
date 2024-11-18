@@ -7,8 +7,9 @@ from utils.dir_fuzz import dir_fuzz  # Custom module for directory fuzzing
 from utils.subdomain_fuzz import subdomain_fuzzing  # Custom module for subdomain fuzzing
 from utils.vhost import VHostEnum  # Custom module for VHost enumeration
 from utils.sql import perform_sql_injection_test  # Custom module for SQL injection tests
-from utils.rate import perform_rate_limit_test, format_url  # Custom module for rate limit testing
-from utils.info_gthr import get_network_map, get_whois_info, get_ssl_info  # Custom modules for information gathering
+from utils.rate_limit import perform_rate_limit_test, format_url  # Custom module for rate limit testing
+from utils.info_gathr import get_network_map, get_whois_info, get_ssl_info  # Custom modules for information gathering
+
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Replace with a strong, unique key for production
