@@ -17,11 +17,9 @@ app.config['ALLOWED_EXTENSIONS'] = {'txt'}
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(DEFAULT_WORDLIST_PATH, exist_ok=True)
 
-
 # Helper function to check allowed file extensions
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
-
 
 # Function to detect API endpoints
 def detect_api_endpoints(target_url, payloads):
@@ -47,11 +45,36 @@ def detect_api_endpoints(target_url, payloads):
 
     return [result for result in results if result]
 
+# Function to test for XSS vulnerabilities
+def test_xss(endpoint, payload_file):
+    results = []
+    try:
+        with open(payload_file, 'r') as file:
+            payloads = file.readlines()
+
+        for payload in payloads:
+            payload = payload.strip()
+            response = requests.get(f"{endpoint}?q={payload}")
+            if payload in response.text:
+                results.append({
+                    'payload': payload,
+                    'status': 'Vulnerable',
+                    'details': 'Payload reflected in the response'
+                })
+            else:
+                results.append({
+                    'payload': payload,
+                    'status': 'Safe',
+                    'details': 'No reflection of payload in the response'
+                })
+    except Exception as e:
+        results.append({'error': str(e)})
+
+    return results
 
 @app.route('/')
 def index():
     return render_template('index.html')
-
 
 @app.route('/fuzz', methods=['POST'])
 def fuzz():
@@ -111,26 +134,28 @@ def fuzz():
 
     return render_template('results.html', target_url=target_url, results=results)
 
-
-@app.route('/detect', methods=['POST'])
-def detect():
-    target_url = request.form['target_url']
-    payload_choice = request.form['payload_choice']
-    custom_file = request.files.get('custom_file')
-
-    payloads = []
-    if payload_choice == 'custom' and custom_file and allowed_file(custom_file.filename):
-        payloads = custom_file.read().decode('utf-8').splitlines()
+@app.route('/xss_test', methods=['POST'])
+def xss_test():
+    endpoint = request.form['endpoint']
+    payload_choice = request.form['payload']
+    
+    if payload_choice == 'default':
+        payload_path = os.path.join(DEFAULT_WORDLIST_PATH, 'xss.txt')
+    elif payload_choice == 'custom':
+        file = request.files['custom_payload']
+        if file and allowed_file(file.filename):
+            filename = os.path.join(UPLOAD_FOLDER, secure_filename(file.filename))
+            file.save(filename)
+            payload_path = filename
+        else:
+            flash("Invalid file uploaded. Please upload a valid file.", 'danger')
+            return redirect(url_for('index'))
     else:
-        wordlist_path = os.path.join(DEFAULT_WORDLIST_PATH, 'api.txt')
-        with open(wordlist_path, 'r') as file:
-            payloads = file.read().splitlines()
+        flash("Invalid payload choice.", 'danger')
+        return redirect(url_for('index'))
 
-    results = detect_api_endpoints(target_url, payloads)
-    if not results:
-        return render_template('results.html', message="No successful endpoints found.")
-    return render_template('results.html', results=results)
-
+    results = test_xss(endpoint, payload_path)
+    return render_template('results.html', endpoint=endpoint, results=results)
 
 @app.route('/start_enum', methods=['POST'])
 def start_enum():
@@ -153,7 +178,6 @@ def start_enum():
 
     return render_template('results.html', target=target_website, result=result)
 
-
 @app.route('/sql_test', methods=['POST'])
 def sql_test():
     endpoint = request.form['endpoint']
@@ -175,7 +199,6 @@ def sql_test():
 
     results = perform_sql_injection_test(endpoint, payload_path)
     return render_template('results.html', endpoint=endpoint, results=results)
-
 
 if __name__ == '__main__':
     app.run(debug=True)
