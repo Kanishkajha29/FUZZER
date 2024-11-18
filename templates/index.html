@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <title>Rate Limit Tester</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Rate Limit Tester</h1>
+        <form action="/results" method="post">
+            <label for="target_url">Enter Target Endpoint:</label>
+            <input type="text" id="target_url" name="target_url" placeholder="google.com" required>
+            
+            <label for="num_requests">Number of Requests:</label>
+            <input type="number" id="num_requests" name="num_requests" placeholder="10" min="1" required>
+            
+            <button type="submit">Start Testing!</button>
+        </form>
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+    </div>
+</body>
+</html>

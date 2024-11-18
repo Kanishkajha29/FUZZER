@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <title>Test Results</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Rate Limit Test Results</h1>
+        <p>Target URL: {{ results[0].target_url if results else "N/A" }}</p>
+        <p>Number of Requests: {{ num_requests }}</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Status Code</th>
+                    <th>Response Time</th>
+                    <th>Content Length</th>
+                    <th>Error</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for result in results %}
+                    <tr>
+                        <td>{{ result.request_number }}</td>
+                        <td>{{ result.status_code }}</td>
+                        <td>{{ result.response_time }}</td>
+                        <td>{{ result.content_length }}</td>
+                        <td>{{ result.error if result.error else 'None' }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="/">Test Another Endpoint</a>
+    </div>
+</body>
+</html>
