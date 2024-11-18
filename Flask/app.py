@@ -8,6 +8,7 @@ from utils.subdomain_fuzz import subdomain_fuzzing  # Custom module for subdomai
 from utils.vhost import VHostEnum  # Custom module for VHost enumeration
 from utils.sql import perform_sql_injection_test  # Custom module for SQL injection tests
 from utils.rate import perform_rate_limit_test, format_url  # Custom module for rate limit testing
+from utils.info_gthr import get_network_map, get_whois_info, get_ssl_info  # Custom modules for information gathering
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Replace with a strong, unique key for production
@@ -77,6 +78,7 @@ def test_xss(endpoint, payload_file):
 def index():
     return render_template('index.html')
 
+# Route for fuzzing and vulnerability testing (from Code 1)
 @app.route('/fuzz', methods=['POST'])
 def fuzz():
     target_url = request.form['target_url']
@@ -135,6 +137,7 @@ def fuzz():
 
     return render_template('results.html', target_url=target_url, results=results)
 
+# Route for XSS testing (from Code 1)
 @app.route('/xss_test', methods=['POST'])
 def xss_test():
     endpoint = request.form['endpoint']
@@ -158,6 +161,7 @@ def xss_test():
     results = test_xss(endpoint, payload_path)
     return render_template('results.html', endpoint=endpoint, results=results)
 
+# Route for VHost enumeration (from Code 1)
 @app.route('/start_enum', methods=['POST'])
 def start_enum():
     target_website = request.form['target_website']
@@ -179,6 +183,7 @@ def start_enum():
 
     return render_template('results.html', target=target_website, result=result)
 
+# Route for SQL Injection testing (from Code 1)
 @app.route('/sql_test', methods=['POST'])
 def sql_test():
     endpoint = request.form['endpoint']
@@ -201,6 +206,7 @@ def sql_test():
     results = perform_sql_injection_test(endpoint, payload_path)
     return render_template('results.html', endpoint=endpoint, results=results)
 
+# Route for Rate Limit testing (from Code 1)
 @app.route('/rate_limit_test', methods=['POST'])
 def rate_limit_test():
     target_url = request.form.get('target_url')
@@ -216,6 +222,28 @@ def rate_limit_test():
     # Perform rate limit testing
     results = perform_rate_limit_test(formatted_url, num_requests)
     return render_template('results.html', results=results, num_requests=num_requests)
+
+# Route for Information Gathering (from Code 2)
+@app.route('/info_gather', methods=['POST'])
+def info_gather():
+    url = request.form.get('target_url')
+    options = {
+        "network_map": request.form.get('network_map') == 'yes',
+        "whois_info": request.form.get('whois_info') == 'yes',
+        "ssl_info": request.form.get('ssl_info') == 'yes'
+    }
+    results = {}
+
+    if options['network_map']:
+        results['network_map'] = get_network_map(url)
+
+    if options['whois_info']:
+        results['whois_info'] = get_whois_info(url)
+
+    if options['ssl_info']:
+        results['ssl_info'] = get_ssl_info(url)
+
+    return render_template('result.html', url=url, results=results)
 
 if __name__ == '__main__':
     app.run(debug=True)
