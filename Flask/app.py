@@ -7,6 +7,7 @@ from utils.dir_fuzz import dir_fuzz  # Custom module for directory fuzzing
 from utils.subdomain_fuzz import subdomain_fuzzing  # Custom module for subdomain fuzzing
 from utils.vhost import VHostEnum  # Custom module for VHost enumeration
 from utils.sql import perform_sql_injection_test  # Custom module for SQL injection tests
+from utils.rate import perform_rate_limit_test, format_url  # Custom module for rate limit testing
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Replace with a strong, unique key for production
@@ -199,6 +200,22 @@ def sql_test():
 
     results = perform_sql_injection_test(endpoint, payload_path)
     return render_template('results.html', endpoint=endpoint, results=results)
+
+@app.route('/rate_limit_test', methods=['POST'])
+def rate_limit_test():
+    target_url = request.form.get('target_url')
+    num_requests = request.form.get('num_requests', type=int)
+    
+    if not target_url or not num_requests or num_requests <= 0:
+        flash("Please enter a valid target endpoint and a positive number of requests.", 'danger')
+        return redirect(url_for('index'))
+
+    # Format URL to ensure it is valid
+    formatted_url = format_url(target_url)
+
+    # Perform rate limit testing
+    results = perform_rate_limit_test(formatted_url, num_requests)
+    return render_template('results.html', results=results, num_requests=num_requests)
 
 if __name__ == '__main__':
     app.run(debug=True)
